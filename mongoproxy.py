@@ -1,5 +1,7 @@
 import requests
 import pickle
+import sign
+import json
 
 
 class collection:
@@ -12,11 +14,16 @@ class collection:
         return getattr(self, '_func')
 
     def _func(self, *args, **kwargs):
-        response = requests.post(self.db.client.uri, json={'db': self.db.name,
-                                                           'coll': self.name,
-                                                           'func': self.func,
-                                                           'args': args,
-                                                           'kwargs': kwargs})
+        data = json.dumps({'db': self.db.name, 'coll': self.name, 'func': self.func,
+                           'args': args, 'kwargs': kwargs})
+        headers = {'signature': sign.sign(data.encode('utf-8'))}
+
+        response = requests.post(
+            self.db.client.uri, data=data, headers=headers)
+
+        if(response.status_code != 200):
+            raise RuntimeError(response.text)
+
         return pickle.loads(response.content)
 
 
