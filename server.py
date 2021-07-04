@@ -10,6 +10,7 @@ mongo = {}
 
 
 def mongoinit(uri):
+    global mongo
     mongo = pymongo.MongoClient(uri)
 
 
