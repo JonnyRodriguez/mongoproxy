@@ -1,7 +1,7 @@
 import requests
 import pickle
-import sign
 import json
+from .sign import sign
 
 
 class collection:
@@ -16,7 +16,7 @@ class collection:
     def _func(self, *args, **kwargs):
         data = json.dumps({'db': self.db.name, 'coll': self.name, 'func': self.func,
                            'args': args, 'kwargs': kwargs})
-        headers = {'signature': sign.sign(data.encode('utf-8'))}
+        headers = {'signature': sign(data.encode('utf-8'))}
 
         response = requests.post(
             self.db.client.uri, data=data, headers=headers)
