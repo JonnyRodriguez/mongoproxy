@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from os import environ
-from mongoproxy.server import *
+from mongoproxy.server import mongoinit, app
 
 load_dotenv()
 mongoinit(environ.get('mongouri'))
