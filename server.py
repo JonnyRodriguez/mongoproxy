@@ -5,7 +5,7 @@ import json
 import time
 from .sign import verify
 
-
+secretkey = b'secretkey1234567890'
 mongo = {}
 
 
@@ -19,7 +19,8 @@ async def app(scope, receive, send):
     body = await read_body(receive)
     signature = headers.get(b'signature', b'')
 
-    if not verify(body, signature):
+    #pylint: disable-msg=too-many-arguments
+    if not verify(body, signature, secretkey):
         return await errorresponse(send, 'Unauthorized')
 
     data = json.loads(body)

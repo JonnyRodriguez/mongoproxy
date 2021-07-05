@@ -4,6 +4,9 @@ import json
 from .sign import sign
 
 
+secretkey = b'secretkey1234567890'
+
+
 class collection:
     def __init__(self, name, db):
         self.name = name
@@ -16,7 +19,7 @@ class collection:
     def _func(self, *args, **kwargs):
         data = json.dumps({'db': self.db.name, 'coll': self.name, 'func': self.func,
                            'args': args, 'kwargs': kwargs})
-        headers = {'signature': sign(data.encode('utf-8'))}
+        headers = {'signature': sign(data.encode('utf-8'), secretkey)}
 
         response = requests.post(
             self.db.client.uri, data=data, headers=headers)
